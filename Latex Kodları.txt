@@ -1,0 +1,87 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\title{Kocaeli Üniversitesi \\
+ Prolab-1 3.proje\\
+}
+\author{\IEEEauthorblockN{ İrfan SALIK }
+\IEEEauthorblockA{190202020} \\
+\and
+\IEEEauthorblockN{ Mehmet ŞAHİN }
+\IEEEauthorblock{180202017} \\}
+
+\maketitle
+
+\section{ÖZET}
+Bu projede bizden istenen öncelikli kuyruk (priority queue) kullanarak bir havalimanı uçuş yönetim sistemi oluşturmaktır.
+Kuyruk, ilk giren eleman ilk çıkar (First In First Out – FIFO) mantığında çalışan bir veri yapısıdır. Öncelikli kuyruk veri yapısında ise ilk gelen ilk çıkar mantığı yok. Öncelikli kuyrukta ilk önce önceliği olan kuyruktan çıkar. Bu duruma hastahanede muayene sırasına girmiş insanları örnek verebiliriz. Durumu acil olan bir hasta sonradan geldiyse bile ilk muayene olur.
+
+\section{GİRİŞ}
+Bu proje kapsamında öncelikli kuyruk veri yapısı kullanılarak bir havalimanı uçuş yönetim sistemi oluşturulacaktır. Öncelikli kuyruk veri yapısı, hem bağlı liste hem de dizi yöntemiyle oluşturulabilir. Biz ekip arkadaşım ile birlikte bağlı liste yapısı ile oluşturmaya karar verdik.
+
+ Bu projede uçakların 4 farklı öncelik sırası var. Bu öncelikler 1,2,3,4 tür.  Bu öncelik sırasını öncelik id değişkeninde tutuyoruz ve uçaklardan öncelik id si daha düşük olan daha yüksek önceliğer sahiptir ve kuyruktan ilk o çıkmalıdır. Havalimalnında biri kalkış için biri iniş için olmak üzere toplamda iki adet pist bulunmaktadır. Bir piste saatte bir uçak inebilir veya kalkış yapabilir.  Mesela aynı saate 2 farklı uçak iniş izni istemiş ise bu durumda öncelik id si düşük olan alınır ve diğer ucak bir sonraki saate ertelenir. Projede eğer bir uçak 3 defadan fazla ertelenirse o uçağı başka bir havalimanına yönlendirmemiz isteniyor. 
+ 
+    Hangi uçaklara hangi sırayla iniş izni verildiği, eğer inişi ertelendiyse ne kadar ertelendiği, hangi uçağa hangi sebepten dolayı iniş izni verilmediği gibi bilgileri ekrana yazdırmamız gerekiyor. Bu kontrolleri yaptıktan sonra uçakları öncelik sırasına göre sıralmış oluyoruz.
+
+    Öncelik sırasına göre uçakları sıraya koyduğumuzda ise bu uçaklara ait öncelik id, uçak id, talep ettiği iniş saati , iniş saati, gecikme süresi ve kalkış saati değişkenlerini sıralı bir şekilde output dosyasının içine yazmamız beklenmektedir.
+\section{YÖNTEM}
+
+.
+\begin{figure}[htbp]
+{\includegraphics[width=.45\textwidth]{resim1.png}}
+\label{fig0}
+\end{figure}
+
+    Projeye ilk olarak ekip arkadaşım ile birlikte öncelikli kuyruk veri yapısı hakkında detaylı bir araştırma yaparak başladık. Bu araştırmalarımız sonucu öncelikli kuyruk veri yapısının hem bağlı liste hem de dizi ile tutulabildiğini gördük. Projeye baktığımızda ise bağlı liste kullanımının daha efektif olacağına karar verdik. Bu yüzden projedeki önceliklli kuyruk veri yapısını bağlı listede tutmaya karar verdik. Bağlı liste kullanımı birçok yerde işimizi kolaylaştırdı.
+ \begin{figure}[htbp]
+{\includegraphics[width=.45\textwidth]{resim4.png}}
+\label{fig0}
+\end{figure}
+ 
+ Bağlı liste kullanmaya karar verdikten sonra ilk olarak bize verilen input dosyasındaki uçağa ait öncelik id, uçak id ve uçağın talep ettiği iniş saatine ait verileri dosyadan alıp oluşturduğumuz bağlı listenin içine attık.
+ 
+ \begin{figure}[htbp]
+{\includegraphics[width=.45\textwidth]{resim2.png}}
+\label{fig0}
+\end{figure}
+
+Sonrasında ise oluşturduğumuz bu bağlı listeyi oncelikBul adındaki fonksiyona gönderdik. Bu fonksiyon en öncelikli elemanı bulup kalkış bağlı listesinin içine atma görevinde kullanılıyor. Fonksiyon ilk olarak en erken saate iniş talep eden uçakları buluyor. Daha sonra  bu uçaklar içinde en öncelikli olanı bulunuyor ve o saatte iniş talep eden diğer uçakların iniş saatini 1 saat erteliyor. Böylelikle en erken saate ve en öncelikli uçak bulunmuş oluyor. Bu bulduğumuz uçak ise kalkış adındaki bağlı listenin ilk sırasına yazılıyor. Bu işlem bir for döngüsünde 24 kere tekrar ediyor ve her bulunan sonuç kalkış bağlı listesinde bir sonrakinin ardına yazılıyor ve böylelikle en öncelikli 24 uçak bulunmuş oluyor. Bu işlemler yapılırken bir taraftan da uçakların ertelenme sayılarındaki sayaçta her bir adımda kontrol ediliyor. Sayacı üçten büyük olan uçakların başka bir havalimanına ertelendiğine dair ekrana bir bilgi yazısı yazılıyor ve o uçaklar iniş listesini tutan bağlı listeden çıkarılıyor.
+ \begin{figure}[htbp]
+{\includegraphics[width=.45\textwidth]{resim3.png}}
+\label{fig0}
+\end{figure}
+
+OncelikBul fonksiyonundan çıkıldıktan sonra ise kalkış listesini göster ve dosyaya veri yaz fonksiyonları çalışıyor. Kalkış listesini göster fonksiyonu kalkiş adli bağlı listede tutulan öncelik id, uçak id, talep edilen iniş saati,iniş saati, gecikme süresi, kalkış saati verilerini ekranda sıralı bir şekilde gösterilmesi işini yapıyor. Dosyaya veri yaz fonksiyonu ise kalkış listesini göster fonksiyonunun ekrana yazdığı verileri oluşturulan output dosyasının içine yazmaya görevini üstleniyor.
+\section*{SONUÇ}\label{SCM}
+Sonuç olarak bize verilen bu projede öncelikli kuyruk veri yapısı hakkında bir çok bilgi edindik. Yerli ve yabancı kaynaklardan araştırma yapma ve bilgi edinme tecrübesi kazandık. Bizden istenen havalimanına sonradan iniş talep eden uçağı da sıraya ekleme  isterini sağlayamasak da bu projen çok şey öğrendik. Kuyruk veri yapısının nasıl çalıştığı, kuyruğa nasıl eleman eklendiğini, kuyruktan öncelik sırasına göre nasıl eleman çıkarıldığı ile ilgili bir çok şey öğrendik.
+
+
+\section*{KAYNAKÇA}\label{SCM}
+\begin{itemize}
+    \item https://cdn-acikogretim.istanbul.edu.tr/auzefcontent/20-21-Guz/veri-yapilari/7/index.html
+    \item https://www.youtube.com/watch?v=r3uOBb3BM-0&list=PLh9ECzBB8tJN9bckI6FbWB03HkmogKrFT
+    \item https://www.youtube.com/watch?v=DGi-gSfYfKo&list=PLh9ECzBB8tJN9bckI6FbWB03HkmogKrFT&index=2
+    \item https://www.youtube.com/watch?v=P976s2Qbpc4&list=PLh9ECzBB8tJN9bckI6FbWB03HkmogKrFT&index=5
+    \item https://www.youtube.com/watch?v=wDAf9Er6Qq8&list=PLh9ECzBB8tJN9bckI6FbWB03HkmogKrFT&index=3
+    \item https://www.youtube.com/watch?v=mCIBHDvg50U&t=751s
+    \item https://www.youtube.com/watch?v=1hKLn12poa8
+\end{itemize}
+
+
+\begin{figure}[t]
+{\includegraphics[width=\textwidth]{akissemasi.jpeg}}
+\caption{Akış Diyagramı}
+\label{fig0}
+\end{figure}
+
+\end{document}

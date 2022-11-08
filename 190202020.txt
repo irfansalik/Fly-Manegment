@@ -1,0 +1,251 @@
+#include <iostream>
+#include <stdlib.h>
+ struct node{
+	int oncelik_id;
+	int ucak_id;
+	int talep_edilen_inis_saati;
+	int sayac=0;
+	int inis_saati=talep_edilen_inis_saati + sayac;
+	int sira;
+	struct node *next;
+};
+ struct kalkis{
+	int oncelik_id;
+	int ucak_id;
+	int talep_edilen_inis_saati;
+	int sayac=0;
+	int inis_saati=talep_edilen_inis_saati + sayac;
+	int sira;
+	struct kalkis *next;
+};
+	struct node *front=NULL;
+	struct node *rear=NULL;
+	struct node *iter;
+	struct node *temp;
+	struct kalkis *root = NULL;
+	struct kalkis *gezici;
+
+	FILE *input;
+	FILE *output;
+	
+
+void oncelikBul(node *front){
+		int enkucuk;
+		// En öncelikli 24 elamanı seçme
+for(int i =0; i<24 ;i++)
+{
+	iter=front;
+	enkucuk=25;
+	// En erken iniş talep edilen saati bulma
+	while(iter != NULL)
+	{
+		if(iter->talep_edilen_inis_saati<enkucuk)
+		{
+
+			enkucuk=iter->inis_saati;
+			temp=iter;
+		}
+		iter=iter->next;
+	}
+
+	iter=front;
+	// Aynı saate iniş isteyenlerden en öncelikli olnanı bulma
+	while(iter != NULL)
+	{	
+		
+		if(iter->inis_saati == temp->inis_saati && iter->oncelik_id < temp->oncelik_id)
+		{
+			temp=iter;
+	
+		}
+
+	iter=iter->next;
+	
+	}
+	iter=front;
+	// iniş izni alamayan uçakları bir sonraki saate erteleme
+	while(iter != NULL)
+	{
+		if(iter->inis_saati == temp->inis_saati && iter->ucak_id != temp->ucak_id)
+		{
+	
+			iter->sayac++;
+			iter->inis_saati++;
+		}
+	iter=iter->next;
+	
+	}
+	// En öncelikli elemanı dosyaya yazdırma
+	iter=front;
+	int enk=25;
+	while(iter!= NULL){
+		if(iter->inis_saati < enk){
+			enk = iter->inis_saati;
+}
+	iter=iter->next;
+}	
+	iter = front;
+	while(iter != NULL){
+	if(iter->inis_saati == enk){
+
+		break;
+}
+	
+	iter = iter->next;
+}
+		
+	temp=iter;
+
+	iter=front;
+	if (root == NULL){
+
+	struct kalkis *yer = (kalkis*)malloc(sizeof(kalkis));
+	yer->oncelik_id = temp->oncelik_id;
+	yer->ucak_id = temp->ucak_id;
+	yer->talep_edilen_inis_saati = temp->talep_edilen_inis_saati;
+	yer->sayac = temp->sayac;
+	yer->inis_saati = temp->inis_saati;
+	root =yer;
+	gezici=root;
+
+	
+}	
+	else{
+	struct kalkis *yer = (kalkis*) malloc (sizeof(kalkis));
+	yer->oncelik_id = temp->oncelik_id;
+	yer->ucak_id = temp->ucak_id;
+	yer->talep_edilen_inis_saati = temp->talep_edilen_inis_saati;
+	yer->sayac = temp->sayac;
+	yer->inis_saati = temp->inis_saati;
+	gezici->next=yer;
+	yer->next = NULL;
+	gezici = gezici->next;
+	
+	
+ }
+	
+ 	struct node *temp2;
+	if(iter->ucak_id == temp->ucak_id)
+		{
+			
+			iter = iter->next;
+			front=front->next;
+		//	iter=front;
+			free(temp);
+			
+	
+		}
+	else{
+
+	iter=front;
+	while(iter->next != NULL && iter->next->ucak_id != temp->ucak_id)
+	{
+		iter=iter->next;
+
+	}	
+			iter->next= iter->next->next;
+			free(temp);
+}
+	if(front->next == NULL){
+	struct kalkis *yer = (kalkis*)malloc(sizeof(kalkis));
+	yer->oncelik_id = front->oncelik_id;
+	yer->ucak_id = front->ucak_id;
+	yer->talep_edilen_inis_saati = front->talep_edilen_inis_saati;
+	yer->sayac = front->sayac;
+	yer->inis_saati = front->inis_saati;
+	gezici->next=yer;
+	yer->next =NULL;
+	front=NULL;
+	break;
+}
+	iter=front;
+		if(iter->sayac == 4)
+		{
+			printf(" ucak idsi %2d olan ucak daha oncelikli ucaklar oldugundan dolayi sabiha gokcen hava limanina yonlendirildi \n\n",iter->ucak_id);
+			front=front->next;
+			temp2=iter;
+			iter=iter->next; 
+			free(temp2);
+		
+        }
+
+	while(iter->next != NULL )
+	{	
+	
+		 if(iter->next->sayac >3)
+		{
+			printf(" ucak idsi %2d olan ucak daha oncelikli ucaklar oldugundan dolayi sabiha gokcen hava limanina yonlendirildi \n\n",iter->next->ucak_id);
+			temp2=iter->next;
+			iter->next=iter->next->next;
+			free(temp2);
+		}
+		iter=iter->next;
+		
+	}
+	iter=front;
+}
+
+}
+
+void kalkisListesiYazdir(){
+	gezici=root;
+	printf("\n\n\noncelik_id  ucak_id  talep_edilen_inis_saati  inis_saati  gecikme_suresi  kalkis_saati\n");
+	
+	while(gezici != NULL){
+	printf("%d\t\t%d \t\t%d \t\t  %d \t\t %d \t\t %d\n",gezici->oncelik_id,gezici->ucak_id,gezici->talep_edilen_inis_saati,gezici->inis_saati,gezici->sayac,(gezici->inis_saati+1)%24);
+	gezici= gezici->next;
+}	
+}
+	
+void dosyayaVeriYaz(){
+	output = fopen("output.txt","a");
+	gezici= root;
+	while(gezici != NULL){
+	fprintf(output,"\n%d\t \t%d \t\t %d \t\t %d \t\t %d \t\t %d",gezici->oncelik_id,gezici->ucak_id,gezici->talep_edilen_inis_saati,gezici->inis_saati,gezici->sayac,(gezici->inis_saati+1)%24);
+	gezici = gezici->next;
+}	
+
+
+}
+int main(int argc, char** argv) 
+{
+	input=fopen("input.txt","r");
+	int id,oncelikid,saat,i=1;
+	
+ 	while(!feof(input))
+	{
+		// İnput dosyasından veri alma
+		fscanf(input,"%d %d %d",&oncelikid,&id,&saat);
+	
+		if(front==NULL)
+		{
+			struct node *yeni = (node*)malloc(sizeof(node));
+			yeni->oncelik_id=oncelikid;
+			yeni->ucak_id=id;
+			yeni->talep_edilen_inis_saati=saat;
+			yeni->inis_saati=saat;
+			yeni->sira=i;
+			yeni->next=NULL;
+			front=rear=yeni;
+			iter=front;
+			}
+		else
+		{
+			node *yeni= (node*)malloc(sizeof(node));
+			yeni->oncelik_id=oncelikid;
+			yeni->ucak_id=id;
+			yeni->talep_edilen_inis_saati=saat;
+			yeni->inis_saati=saat;
+			yeni->sira=i;
+			rear->next=yeni;
+			yeni->next=NULL;
+			rear=yeni;
+		}		
+	
+		i++;
+	}
+	oncelikBul(front);
+	kalkisListesiYazdir();
+	dosyayaVeriYaz();
+return 0;
+}
